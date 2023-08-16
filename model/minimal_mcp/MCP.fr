@@ -1,0 +1,33 @@
+M$ModelName = "Minimal MCP";
+
+M$Information = { Authors       -> "I. Hwang",
+                  Version       -> "1.0",
+                  Date          -> "08. 11. 2023"
+};
+
+(*--------------Parameters-------------*)
+
+M$Parameters = {
+    qX == {
+        ParameterType     -> External,
+        Value             -> 0.001,
+        Description       -> "Effective charge of MCP in unit of e; Qchi / e"
+    }
+};
+
+
+(*---------------Fields---------------*)
+
+M$ClassesDescription = {
+    F[31] == {
+        ClassName           -> chi,
+        SelfConjugate       -> False,
+        Indices             -> {},
+        QuantumNumbers      -> {Y -> 0, Q -> 1},
+        Mass                -> {Mchi, 1},
+        Width               -> {Wchi, 0}
+    }
+};
+
+
+LMCP :=  I ( Mchi chibar.chi + chibar.Ga[mu].del[chi, mu] - I g1 qX chibar.Ga[mu].B[mu].chi);
