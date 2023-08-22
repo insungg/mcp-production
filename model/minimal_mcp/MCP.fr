@@ -23,9 +23,10 @@ M$ClassesDescription = {
         ClassName           -> chi,
         SelfConjugate       -> False,
         Indices             -> {},
-        QuantumNumbers      -> {Y -> 0, Q -> 1},
+        QuantumNumbers      -> {Q -> qX},
         Mass                -> {Mchi, 1},
-        Width               -> {Wchi, 0}
+        Width               -> {Wchi, 0},
+		PDG					-> 31
     }
 };
 

@@ -1,6 +1,6 @@
 # This file was automatically created by FeynRules 2.3.49
-# Mathematica version: 13.0.0 for Linux x86 (64-bit) (December 3, 2021)
-# Date: Mon 14 Aug 2023 02:49:50
+# Mathematica version: 13.2.1 for Mac OS X ARM (64-bit) (January 27, 2023)
+# Date: Tue 22 Aug 2023 14:16:48
 
 
 from __future__ import division
@@ -385,7 +385,7 @@ G__plus__ = Particle(pdg_code = 251,
 
 G__minus__ = G__plus__.anti()
 
-chi = Particle(pdg_code = 9000005,
+chi = Particle(pdg_code = 31,
                name = 'chi',
                antiname = 'chi~',
                spin = 2,
@@ -394,7 +394,7 @@ chi = Particle(pdg_code = 9000005,
                width = Param.ZERO,
                texname = 'chi',
                antitexname = 'chi~',
-               charge = 1,
+               charge = qX,
                GhostNumber = 0,
                LeptonNumber = 0,
                Y = 0)

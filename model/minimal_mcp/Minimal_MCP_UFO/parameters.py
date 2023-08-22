@@ -1,6 +1,6 @@
 # This file was automatically created by FeynRules 2.3.49
-# Mathematica version: 13.0.0 for Linux x86 (64-bit) (December 3, 2021)
-# Date: Mon 14 Aug 2023 02:49:50
+# Mathematica version: 13.2.1 for Mac OS X ARM (64-bit) (January 27, 2023)
+# Date: Tue 22 Aug 2023 14:16:48
 
 
 
@@ -223,7 +223,7 @@ Mchi = Parameter(name = 'Mchi',
                  value = 1,
                  texname = '\\text{Mchi}',
                  lhablock = 'MASS',
-                 lhacode = [ 9000005 ])
+                 lhacode = [ 31 ])
 
 WZ = Parameter(name = 'WZ',
                nature = 'external',
