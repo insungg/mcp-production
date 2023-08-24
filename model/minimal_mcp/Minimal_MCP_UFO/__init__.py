@@ -46,5 +46,5 @@ gauge = [0, 1]
 
 
 __author__ = "I. Hwang"
-__date__ = "08. 11. 2023"
-__version__= "1.0"
+__date__ = "08. 23. 2023"
+__version__= "1.1"

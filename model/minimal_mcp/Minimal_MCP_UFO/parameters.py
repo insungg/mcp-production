@@ -1,6 +1,6 @@
 # This file was automatically created by FeynRules 2.3.49
 # Mathematica version: 13.2.1 for Mac OS X ARM (64-bit) (January 27, 2023)
-# Date: Tue 22 Aug 2023 14:16:48
+# Date: Wed 23 Aug 2023 10:42:21
 
 
 
@@ -124,7 +124,7 @@ ymtau = Parameter(name = 'ymtau',
 qX = Parameter(name = 'qX',
                nature = 'external',
                type = 'real',
-               value = 0.001,
+               value = 1,
                texname = '\\text{qX}',
                lhablock = 'FRBlock',
                lhacode = [ 1 ])

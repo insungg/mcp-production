@@ -1,6 +1,6 @@
 # This file was automatically created by FeynRules 2.3.49
 # Mathematica version: 13.2.1 for Mac OS X ARM (64-bit) (January 27, 2023)
-# Date: Tue 22 Aug 2023 14:16:48
+# Date: Wed 23 Aug 2023 10:42:21
 
 
 from __future__ import division
@@ -394,7 +394,7 @@ chi = Particle(pdg_code = 31,
                width = Param.ZERO,
                texname = 'chi',
                antitexname = 'chi~',
-               charge = qX,
+               charge = 0,
                GhostNumber = 0,
                LeptonNumber = 0,
                Y = 0)
