@@ -21,3 +21,7 @@ momentum_new: momentum_new.cc
 jpsi: jpsi.cc 
 	g++ -I${PYTHIA_PATH}/include `root-config --cflags` jpsi.cc \
 		-o jpsi -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
+
+ageo: ageo.cc 
+	g++ -I${PYTHIA_PATH}/include `root-config --cflags` ageo.cc \
+		-o ageo -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
