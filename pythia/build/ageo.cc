@@ -13,7 +13,8 @@ using namespace std;
 
 
 // define ageo vector for record
-vector<vector<double>> ageoRecords;
+vector< vector<double> > ageoRecords;
+vector< vector<double> > genRecords;
 
 // multi-threading callback function
 void* handler(void *t_argv); 
@@ -36,6 +37,11 @@ int main(int argc, char *argv[])
 	// create output file
 	ofstream ageotxt("ageo.txt");
 	if (!ageotxt.is_open()) {
+		cout << "Failed to create the ageo.txt" << endl;
+		return -1;
+	}
+	ofstream gentxt("gen.txt");
+	if (!gentxt.is_open()) {
 		cout << "Failed to create the ageo.txt" << endl;
 		return -1;
 	}
@@ -79,23 +85,35 @@ int main(int argc, char *argv[])
 		delete th[i];
 	}
 
+
+
 	// sort by mass before save
 	sort(ageoRecords.begin(), ageoRecords.end(), 
 			[] (const vector<double> &a, const vector<double> &b) { 
 				return a[0] < b[0];
 			}
 	);
-
+	sort(genRecords.begin(), genRecords.end(), 
+			[] (const vector<double> &a, const vector<double> &b) { 
+				return a[0] < b[0];
+			}
+	);
 	// write final result to ageo.txt
 	for (const auto &row : ageoRecords) {
 		for (double value : row) 
 			ageotxt << value << " ";
 		ageotxt << endl;
 	}
+	for (const auto &row : genRecords) {
+		for (double value : row) 
+			gentxt << value << " ";
+		gentxt << endl;
+	}
 
 	// close file streams
 	masstxt.close();
 	ageotxt.close();
+	gentxt.close();
 
     return 0;
 }
@@ -199,9 +217,12 @@ void* handler(void *t_argv)
     pythia.particleData.list(31); 
 
 	// define hit counter
+	Int_t genCount[nParticle];
 	Int_t hitCount[nParticle];
-	for (Int_t i = 0; i < nParticle; i++)
+	for (Int_t i = 0; i < nParticle; i++) {
+		genCount[i] = 1;
 		hitCount[i] = 0;
+	}
 
     // event generation  
     for (long long i = 0; i < nJobs; i ++) {
@@ -242,9 +263,11 @@ void* handler(void *t_argv)
 
 				// check if mcp hit target
 				for (int k = 0; k < nParticle; k++) {
-					if (particleId[k] == mom1 && abs(x) < 0.5 && abs(y) < 0.5) { // detector face = 1m x 1m
-						hitCount[k]++;
+					if (particleId[k] == mom1) {
+						genCount[k]++;
 						tree[k]->Fill();
+						if (abs(x) < 0.5 && abs(y) < 0.5) // detector face = 1m x 1m
+							hitCount[k]++;
 					}
 				}
 			}  
@@ -252,14 +275,17 @@ void* handler(void *t_argv)
     }  
 
 	// define hit ratio (=ageo)
-	vector<double>  ageo;
-	ageo.push_back(mass);
+	vector<double>  ageo; ageo.push_back(mass);
 	for (int i = 0; i < nParticle; i++)
-		ageo.push_back(hitCount[i] * 1.0 / nJobs); // convert int to double
+		ageo.push_back( hitCount[i] * 1.0 / genCount[i] ); // convert int to double
+	vector<double>  gen; gen.push_back(mass);
+	for (int i = 0; i < nParticle; i++)
+		gen.push_back( genCount[i] );
 	
 	// store final data at ith row
 	// ageoRecords.insert(ageoRecords.begin() + ith, ageo);
 	ageoRecords.push_back(ageo);
+	genRecords.push_back(gen);
 
 
     output->Write();
