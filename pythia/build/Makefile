@@ -25,3 +25,15 @@ jpsi: jpsi.cc
 ageo: ageo.cc 
 	g++ -I${PYTHIA_PATH}/include `root-config --cflags` ageo.cc \
 		-o ageo -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
+
+ageo_jpsi: ageo_jpsi.cc 
+	g++ -I${PYTHIA_PATH}/include `root-config --cflags` ageo_jpsi.cc \
+		-o ageo_jpsi -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
+
+ageo2: ageo2.cc 
+	g++ -I${PYTHIA_PATH}/include `root-config --cflags` ageo2.cc \
+		-o ageo2 -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
+
+ageo_lanl: ageo_lanl.cc 
+	g++ -I${PYTHIA_PATH}/include `root-config --cflags` ageo_lanl.cc \
+		-o ageo_lanl -lpythia8 -L${PYTHIA_PATH}/lib `root-config --glibs`
