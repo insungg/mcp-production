@@ -2,8 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
 from matplotlib import rc
+from matplotlib.ticker import MaxNLocator
 
-def generateSubmet(charge, mass):
+def generateSubmet(mass, charge):
     N_pot = 5 * 10 ** 21  # 0.4x0.4 m2 2 years
     acc_rate = 6 * 10 ** (-5)
     alpha = 1.0 / 137
@@ -70,7 +71,7 @@ def generateSubmet(charge, mass):
 
     return sensitivity
 
-def generateLANL(charge, mass):
+def generateLANL(mass, charge):
     N_pot = 5.9 * 10 ** 22 
     alpha = 1.0 / 137
 
@@ -89,9 +90,12 @@ def generateLANL(charge, mass):
 
     N_gamma = 4.2 * 10 ** 5 * 0.3 * 5  # n_pe within pmt
 
-    ageo_data = np.loadtxt("ageo.txt")
-    ageo10m = ageo_data[:, 1]
-    ageo35m = ageo_data[:, 2]
+#     ageo_data = np.loadtxt("ageo.txt")
+#     ageo10m = ageo_data[:, 1]
+#     ageo35m = ageo_data[:, 2]
+
+    ageo10m = np.full(np.shape(mass), 1e-4)
+    ageo35m = np.full(np.shape(mass), 1e-4)
 
     def I_3(z, x):
         return 2 / (3 * 3.14) * ((1 - 4 * x / z) ** 0.5) * ((1 - z) ** 3) * (2 * x + z) / z ** 2
@@ -125,14 +129,16 @@ if __name__ == '__main__':
     charge = np.logspace(-5, 1, 500)
     masses, charges = np.meshgrid(mass, charge)
     submet = generateSubmet(masses, charges)
-
-    mass = np.loadtxt("mass.txt")
-    masses, charges = np.meshgrid(mass, charges)
-    lanl10m, lanl35m = generateLANL(masses, charges)
-
     
 
-    fig, ax = plt.figure(figsize(16, 12), dpi=500)
+#     mass = np.loadtxt("mass.txt")
+#    masses, charges = np.meshgrid(mass, charges)
+    lanl10m, lanl35m = generateLANL(masses, charges)
+
+    print("Generation completed") 
+#    np.savetxt("temp.txt", submet)
+
+    fig, ax = plt.subplots()
     plt.xscale('log')
     plt.yscale('log')
     plt.xlabel('$m_{\chi}$ [$\mathrm{GeV}/\mathrm{c}^2$]')
@@ -140,12 +146,20 @@ if __name__ == '__main__':
     plt.xlim(0.01, 10)
     plt.ylim(0.00001, 1)
 
-    plt.contour(mass, charge, submet, [12], colors = 'red', linestyles = 'dashed')
+# heatmap = ax.imshow(submet, extent = (mass.min(), mass.max(), charge.min(), charge.max()), origin='lower', cmap='viridis')
+#cbar    = plt.colorbar(heatmap)
 
 
 
-    plt.legend(loc=4)
-    plt.legend(ncol=2)
+#    submet_levels = np.min(submet[ (submet >= 12) & (submet < 13)])
+    plt.contour(mass, charge, submet, levels=[14], colors = 'red', linestyles = 'dashed')
+    plt.contour(mass, charge, lanl10m, levels=[50], colors = 'lawngreen', linestyles = 'dashed')
+    plt.contour(mass, charge, lanl35m, levels=[50], colors = 'greenyellow', linestyles = 'dashed')
+
+
+
+#    plt.legend(loc=4)
+#    plt.legend(ncol=2)
 # plt.savefig('sensitivity_lanl.pdf')
     plt.show()
 
