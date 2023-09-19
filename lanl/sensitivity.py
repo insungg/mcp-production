@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 from matplotlib import rc
 from matplotlib.ticker import MaxNLocator
+import matplotlib
+matplotlib.use('Agg')
+
 
 import matplotlib
 matplotlib.use('TkAgg')
