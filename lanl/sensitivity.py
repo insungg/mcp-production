@@ -4,6 +4,9 @@ from scipy.integrate import quad
 from matplotlib import rc
 from matplotlib.ticker import MaxNLocator
 
+import matplotlib
+matplotlib.use('TkAgg')
+
 def generateSubmet(mass, charge):
     N_pot = 5 * 10 ** 21  # 0.4x0.4 m2 2 years
     acc_rate = 6 * 10 ** (-5)
@@ -33,8 +36,9 @@ def generateSubmet(mass, charge):
     branch_phi = 2.95e-4
     branch_Jpsi = 0.06
 
-    N_gamma = 4.2 * 10 ** 5 * 0.3 * 5  # n_pe within pmt
+    N_gamma = 2.5e5
 
+    #N_gamma = 4.2 * 10 ** 5 * 0.3 * 5  # n_pe within pmt
     # N_gamma = 4.2*10**5*0.3*2 # n_pe within pmt, 20cm BGO
     # N_gamma = 4*10**5
 
@@ -71,31 +75,26 @@ def generateSubmet(mass, charge):
 
     return sensitivity
 
-def generateLANL(mass, charge):
-    N_pot = 5.9 * 10 ** 22 
+def generateLANL(mass, charge, a):
+    N_pot = 5.9e22 
     alpha = 1.0 / 137
 
-    a = 2  # num of layers
+#    a = 4  # num of layers
 
     m_e = 0.00051
     m_pi = 0.135
     m_eta = 0.548
 
-    c_pi = 1.9
-    c_eta = 0.21
-    c_rho = 0.24
+    c_pi = 0.115
+    c_eta = c_pi/30
 
     branch_pi = 0.98
     branch_eta = 0.39
 
-    N_gamma = 4.2 * 10 ** 5 * 0.3 * 5  # n_pe within pmt
+    N_gamma = 2.5e5
 
-#     ageo_data = np.loadtxt("ageo.txt")
-#     ageo10m = ageo_data[:, 1]
-#     ageo35m = ageo_data[:, 2]
-
-    ageo10m = np.full(np.shape(mass), 1e-4)
-    ageo35m = np.full(np.shape(mass), 1e-4)
+    ageo10m = np.full(np.shape(mass), 8e-5)
+    ageo35m = np.full(np.shape(mass), 5e-5)
 
     def I_3(z, x):
         return 2 / (3 * 3.14) * ((1 - 4 * x / z) ** 0.5) * ((1 - z) ** 3) * (2 * x + z) / z ** 2
@@ -130,13 +129,13 @@ if __name__ == '__main__':
     masses, charges = np.meshgrid(mass, charge)
     submet = generateSubmet(masses, charges)
     
-
-#     mass = np.loadtxt("mass.txt")
+#    mass = np.loadtxt("mass.txt")
 #    masses, charges = np.meshgrid(mass, charges)
-    lanl10m, lanl35m = generateLANL(masses, charges)
+    lanl10m_4layer, lanl35m_4layer = generateLANL(masses, charges, 4)
+    lanl10m_3layer, lanl35m_3layer = generateLANL(masses, charges, 3)
+    lanl10m_2layer, lanl35m_2layer = generateLANL(masses, charges, 2)
 
     print("Generation completed") 
-#    np.savetxt("temp.txt", submet)
 
     fig, ax = plt.subplots()
     plt.xscale('log')
@@ -146,20 +145,19 @@ if __name__ == '__main__':
     plt.xlim(0.01, 10)
     plt.ylim(0.00001, 1)
 
-# heatmap = ax.imshow(submet, extent = (mass.min(), mass.max(), charge.min(), charge.max()), origin='lower', cmap='viridis')
-#cbar    = plt.colorbar(heatmap)
+
+    plt.contour(mass, charge, submet, levels=[12], colors = 'red')
+    plt.contour(mass, charge, lanl10m_4layer, levels=[8], colors = 'greenyellow', label='4 Layers, bkg = 10')
+    plt.contour(mass, charge, lanl35m_4layer, levels=[8], colors = 'lawngreen')
+    plt.contour(mass, charge, lanl10m_3layer, levels=[46], colors = 'orange', label='3 Layers, bkg = 513')
+    plt.contour(mass, charge, lanl35m_3layer, levels=[46], colors = 'darkorange')
+    plt.contour(mass, charge, lanl10m_2layer, levels=[48], colors = 'skyblue', label='2 Layers with beam timing, bkg = 562')
+    plt.contour(mass, charge, lanl35m_2layer, levels=[48], colors = 'deepskyblue')
+    plt.contour(mass, charge, lanl10m_2layer, levels=[15], colors = 'cyan', label='2 Layers with beam timing, bkg = 50')
+    plt.contour(mass, charge, lanl35m_2layer, levels=[15], colors = 'darkcyan')
 
 
-
-#    submet_levels = np.min(submet[ (submet >= 12) & (submet < 13)])
-    plt.contour(mass, charge, submet, levels=[14], colors = 'red', linestyles = 'dashed')
-    plt.contour(mass, charge, lanl10m, levels=[50], colors = 'lawngreen', linestyles = 'dashed')
-    plt.contour(mass, charge, lanl35m, levels=[50], colors = 'greenyellow', linestyles = 'dashed')
-
-
-
-#    plt.legend(loc=4)
-#    plt.legend(ncol=2)
-# plt.savefig('sensitivity_lanl.pdf')
+    plt.legend(loc=4)
+    plt.legend(ncol=2)
+    plt.savefig('sensitivity_lanl.pdf')
     plt.show()
-
