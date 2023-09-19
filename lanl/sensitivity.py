@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 from matplotlib import rc
 from matplotlib.ticker import MaxNLocator
+import matplotlib
+matplotlib.use('Agg')
+
 
 def generateSubmet(mass, charge):
     N_pot = 5 * 10 ** 21  # 0.4x0.4 m2 2 years
