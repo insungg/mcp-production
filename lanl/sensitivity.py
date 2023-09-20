@@ -3,12 +3,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 from matplotlib import rc
 from matplotlib.ticker import MaxNLocator
-import matplotlib
-matplotlib.use('Agg')
-
 
 import matplotlib
-matplotlib.use('TkAgg')
+# matplotlib.use('TkAgg')
 
 def generateSubmet(mass, charge):
     N_pot = 5 * 10 ** 21  # 0.4x0.4 m2 2 years
@@ -78,7 +75,7 @@ def generateSubmet(mass, charge):
 
     return sensitivity
 
-def generateLANL(mass, charge, a):
+def generateLANL(mass, charge, a, N_gamma=2.5e5):
     N_pot = 5.9e22 
     alpha = 1.0 / 137
 
@@ -93,8 +90,6 @@ def generateLANL(mass, charge, a):
 
     branch_pi = 0.98
     branch_eta = 0.39
-
-    N_gamma = 2.5e5
 
     ageo10m = np.full(np.shape(mass), 8e-5)
     ageo35m = np.full(np.shape(mass), 5e-5)
@@ -137,6 +132,7 @@ if __name__ == '__main__':
     lanl10m_4layer, lanl35m_4layer = generateLANL(masses, charges, 4)
     lanl10m_3layer, lanl35m_3layer = generateLANL(masses, charges, 3)
     lanl10m_2layer, lanl35m_2layer = generateLANL(masses, charges, 2)
+    lanl10m_2lyaer_yield, _        = generateLANL(masses, charges, 2, 1.25e6)
 
     print("Generation completed") 
 
@@ -151,21 +147,27 @@ if __name__ == '__main__':
 
     submetctr = ax.contour(mass, charge, submet, levels=[12], colors = 'red')
     lanl4ctr  = ax.contour(mass, charge, lanl10m_4layer, levels=[8], colors = 'greenyellow')
-    ax.contour(mass, charge, lanl35m_4layer, levels=[8], colors = 'lawngreen')
-    lanl3ctr = ax.contour(mass, charge, lanl10m_3layer, levels=[46], colors = 'orange')
-    ax.contour(mass, charge, lanl35m_3layer, levels=[46], colors = 'darkorange')
+# ax.contour(mass, charge, lanl35m_4layer, levels=[8], colors = 'lawngreen')
+#    lanl3ctr = ax.contour(mass, charge, lanl10m_3layer, levels=[46], colors = 'orange')
+# ax.contour(mass, charge, lanl35m_3layer, levels=[46], colors = 'darkorange')
     lanl2ctr  = ax.contour(mass, charge, lanl10m_2layer, levels=[48], colors = 'skyblue')
-    ax.contour(mass, charge, lanl35m_2layer, levels=[48], colors = 'deepskyblue')
+# ax.contour(mass, charge, lanl35m_2layer, levels=[48], colors = 'deepskyblue')
     lanl2ctr2 = ax.contour(mass, charge, lanl10m_2layer, levels=[15], colors = 'cyan')
-    ax.contour(mass, charge, lanl35m_2layer, levels=[15], colors = 'darkcyan')
+# ax.contour(mass, charge, lanl35m_2layer, levels=[15], colors = 'darkcyan')
+    lanl2ctr_nobkg = ax.contour(mass, charge, lanl10m_2layer, levels=[3], colors='green')
+    lanl2ctr_yield = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[48], colors='orange')
+    lanl2ctr_yield2 = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[15], colors='darkorange')
 
     h1, _ = submetctr.legend_elements()
     h2, _ = lanl4ctr.legend_elements()
-    h3, _ = lanl3ctr.legend_elements()
-    h4, _ = lanl2ctr.legend_elements()
-    h5, _ = lanl2ctr2.legend_elements()
+    h3, _ = lanl2ctr.legend_elements()
+    h4, _ = lanl2ctr2.legend_elements()
+    h5, _ = lanl2ctr_nobkg.legend_elements()
+    h6, _ = lanl2ctr_yield.legend_elements()
+    h7, _ = lanl2ctr_yield2.legend_elements()
 
-    ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0]], ['Submet', '4 Layers, bkg = 10', '3 Layers, bkg = 513', '2 Layers, bkg = 562', '2 Layers, bkg = 50'], loc = 'lower right')
+#     ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0]], ['Submet', '4 Layers, bkg = 10', '3 Layers, bkg = 513', '2 Layers, bkg = 562', '2 Layers, bkg = 50'], loc = 'lower right')
+    ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0], h6[0], h7[0]], ['Submet', '4 Layers, bkg = 10', '2 Layers, bkg = 513', '2 Layers, bkg = 50', '2 Layers, bkg = 0', '2 Layers, bkg = 513, 5Npe', '2 Layers, bkg = 50,  5Npe'], loc = 'lower right')
 
     plt.savefig('sensitivity_lanl.pdf')
     plt.show()
