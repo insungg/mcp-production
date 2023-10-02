@@ -95,7 +95,7 @@ void decayPion() {
 		// boost V from its rest frame along z direction
 		double vP    = lambda(mpi, sqrt(s), 0); // pion -> V + gamma, mass of gamma = 0
 		double vBeta = vP / sqrt(vP*vP + s); 
-		cout << "vBeta : " << vBeta << endl;
+		// cout << "vBeta : " << vBeta << endl;
 		mcp1.momentum.Boost(0, 0, vBeta);
 		mcp2.momentum.Boost(0, 0, vBeta);
 		// pion -> V + gamma is an isotropic two-body decay processs

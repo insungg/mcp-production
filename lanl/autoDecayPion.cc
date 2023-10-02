@@ -17,11 +17,11 @@ const double alpha 		= 0.0072973526; // 1/137
 const double PI    		= 3.14159265358979;
 const double conv2rad 	= PI/180.0;
 
-double envelope = 15000; // enveloping function of ddBrPi2gxx for rejection sampling
+double envelope = 150; // enveloping function of ddBrPi2gxx for rejection sampling
 
 // model parameter, like coupling constants
 const double epsilon   = 1.0;
-const double BrPi2gg   = 1e12; // Br(pion -> gamam gamma) 
+const double BrPi2gg   = 1e10; // Br(pion -> gamam gamma) 
 double mchi;
 
 
@@ -52,19 +52,19 @@ void autoDecayPion() { // mass of chi in MeV
 		cout << "Failed to open pion data" << endl;
 		return -1;
 	}
-	ifstream massTxt("mass.txt");
+	ifstream massTxt("mass2.txt");
 	if (!massTxt.is_open()) {
 		cout << "Failed to open mass data" << endl;
 		return -1;
 	}
-	ofstream ageoTxt("ageo.txt");
+	ofstream ageoTxt("ageo_e72.txt");
 	if (!ageoTxt.is_open()) {
 		cout << "Failed to open ageo data" << endl;
 		return -1;
 	}
 
 	vector<vector<double>> records;
-	int nMass = 98;
+	int nMass = 22;
 	string line;
 	TRandom3 rand;
 	for (int i = 0; i < nMass; i++) {
@@ -73,6 +73,8 @@ void autoDecayPion() { // mass of chi in MeV
 		double PX, PY, PZ, PP, M, E; 
 		int hitCounter10m = 0;
 		int hitCounter35m = 0;
+		int hitCounter60m = 0;
+		int hitCounter100m = 0;
 
 
 		// loop through pion data 
@@ -141,12 +143,6 @@ void autoDecayPion() { // mass of chi in MeV
 			if (abs(y) < 0.25 && abs(z) < 0.2)
 				hitCounter10m++;
 
-			PX = mcp2.momentum.Px();
-			PY = mcp2.momentum.Py();
-			PZ = mcp2.momentum.Pz();
-			PP = mcp2.momentum.P();
-			M  = mcp2.momentum.M();
-			E  = mcp2.momentum.E();
 		
 			bx = PX/E; by = PY/E; bz = PZ/E;
 			scale = 35.0/bx; // time to arriave at the target multiplied by c
@@ -156,10 +152,30 @@ void autoDecayPion() { // mass of chi in MeV
 
 			if (abs(y) < 0.25 && abs(z) < 0.2)
 				hitCounter35m++;
+
+			bx = PX/E; by = PY/E; bz = PZ/E;
+			scale = 60.0/bx; // time to arriave at the target multiplied by c
+			
+			y = by * scale; // by * c * scale / c = by * scale
+			z = bz * scale; 
+
+			if (abs(y) < 0.25 && abs(z) < 0.2)
+				hitCounter60m++;
+
+			bx = PX/E; by = PY/E; bz = PZ/E;
+			scale = 100.0/bx; // time to arriave at the target multiplied by c
+			
+			y = by * scale; // by * c * scale / c = by * scale
+			z = bz * scale; 
+
+			if (abs(y) < 0.25 && abs(z) < 0.2)
+				hitCounter100m++;
 		}
 		vector<double> ageo; ageo.push_back(mchi);
-		ageo.push_back(hitCounter10m * 1.0 / 2e5);
-		ageo.push_back(hitCounter35m * 1.0 / 2e5);
+		ageo.push_back(hitCounter10m);
+		ageo.push_back(hitCounter35m);
+		ageo.push_back(hitCounter60m);
+		ageo.push_back(hitCounter100m);
 		records.push_back(ageo);
 		cout << i << " th mass point done" << endl;
 		pionTxt.clear();

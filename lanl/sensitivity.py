@@ -122,7 +122,7 @@ def generateLANL(mass, charge, a, N_gamma=2.5e5):
     return sensitivity10m, sensitivity35m
 
 if __name__ == '__main__':
-    mass   = np.logspace(-2, 1, 500)
+    mass   = np.logspace(-4, 1, 500)
     charge = np.logspace(-5, 1, 500)
     masses, charges = np.meshgrid(mass, charge)
     submet = generateSubmet(masses, charges)
@@ -130,9 +130,11 @@ if __name__ == '__main__':
 #    mass = np.loadtxt("mass.txt")
 #    masses, charges = np.meshgrid(mass, charges)
     lanl10m_4layer, lanl35m_4layer = generateLANL(masses, charges, 4)
-    lanl10m_3layer, lanl35m_3layer = generateLANL(masses, charges, 3)
+#    lanl10m_3layer, lanl35m_3layer = generateLANL(masses, charges, 3)
     lanl10m_2layer, lanl35m_2layer = generateLANL(masses, charges, 2)
     lanl10m_2lyaer_yield, _        = generateLANL(masses, charges, 2, 1.25e6)
+#    _, lanl10m_1lyaer              = generateLANL(masses, charges, 1)
+    _, lanl10m_1lyaer_yield        = generateLANL(masses, charges, 1, 1.25e6)
 
     print("Generation completed") 
 
@@ -141,22 +143,24 @@ if __name__ == '__main__':
     plt.yscale('log')
     plt.xlabel('$m_{\chi}$ [$\mathrm{GeV}/\mathrm{c}^2$]')
     plt.ylabel('$\epsilon=Q/e$')
-    plt.xlim(0.01, 10)
+    plt.xlim(0.0001, 10)
     plt.ylim(0.00001, 1)
 
 
-    submetctr = ax.contour(mass, charge, submet, levels=[12], colors = 'red')
+    submetctr = ax.contour(mass, charge, submet, levels=[20], colors = 'red')
     lanl4ctr  = ax.contour(mass, charge, lanl10m_4layer, levels=[8], colors = 'greenyellow')
 # ax.contour(mass, charge, lanl35m_4layer, levels=[8], colors = 'lawngreen')
-#    lanl3ctr = ax.contour(mass, charge, lanl10m_3layer, levels=[46], colors = 'orange')
+#    lanl3ctr = ax.contour(mass, charge, lanl10m_3layer, levels=[8], colors = 'darkcyan')
 # ax.contour(mass, charge, lanl35m_3layer, levels=[46], colors = 'darkorange')
-    lanl2ctr  = ax.contour(mass, charge, lanl10m_2layer, levels=[48], colors = 'skyblue')
+    lanl2ctr  = ax.contour(mass, charge, lanl10m_2layer, levels=[61], colors = 'skyblue')
 # ax.contour(mass, charge, lanl35m_2layer, levels=[48], colors = 'deepskyblue')
-    lanl2ctr2 = ax.contour(mass, charge, lanl10m_2layer, levels=[15], colors = 'cyan')
+    lanl2ctr2 = ax.contour(mass, charge, lanl10m_2layer, levels=[20], colors = 'cyan')
 # ax.contour(mass, charge, lanl35m_2layer, levels=[15], colors = 'darkcyan')
     lanl2ctr_nobkg = ax.contour(mass, charge, lanl10m_2layer, levels=[3], colors='green')
-    lanl2ctr_yield = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[48], colors='orange')
-    lanl2ctr_yield2 = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[15], colors='darkorange')
+    lanl2ctr_yield = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[61], colors='orange')
+    lanl2ctr_yield2 = ax.contour(mass, charge, lanl10m_2lyaer_yield, levels=[20], colors='darkorange')
+#    lanl1ctr = ax.contour(mass, charge, lanl10m_1lyaer, levels=[428], colors='darkviolet')
+    lanl1ctr_yield = ax.contour(mass, charge, lanl10m_1lyaer_yield, levels=[428], colors='blueviolet')
 
     h1, _ = submetctr.legend_elements()
     h2, _ = lanl4ctr.legend_elements()
@@ -165,9 +169,15 @@ if __name__ == '__main__':
     h5, _ = lanl2ctr_nobkg.legend_elements()
     h6, _ = lanl2ctr_yield.legend_elements()
     h7, _ = lanl2ctr_yield2.legend_elements()
+#    h8, _ = lanl1ctr.legend_elements()
+    h9, _ = lanl1ctr_yield.legend_elements()
+# h10,_ = lanl3ctr.legend_elements()
 
 #     ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0]], ['Submet', '4 Layers, bkg = 10', '3 Layers, bkg = 513', '2 Layers, bkg = 562', '2 Layers, bkg = 50'], loc = 'lower right')
-    ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0], h6[0], h7[0]], ['Submet', '4 Layers, bkg = 10', '2 Layers, bkg = 513', '2 Layers, bkg = 50', '2 Layers, bkg = 0', '2 Layers, bkg = 513, 5Npe', '2 Layers, bkg = 50,  5Npe'], loc = 'lower right')
+#    ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0], h6[0], h7[0], h8[0], h9[0], h10[0]], 
+#            ['Submet', '4 Layers, 80 bars, bkg = 10', '2 Layers, 80 bars,  bkg = 931', '2 Layers, 80 bars,  bkg = 90', '2 Layers, 80 bars,  bkg = 0', '2 Layers, 80 bars,  bkg = 931, 5Npe', '2 Layers, 80 bars,  bkg = 90, 5Npe', '1 Layer, 1 bar, bkg = 47k', '1 Layer, 1 bar, bkg = 47k, 5Npe', '3layer'], loc = 'lower right')
+
+    ax.legend([h1[0], h2[0], h3[0], h4[0], h5[0], h6[0], h7[0], h9[0]], ['SUBMET', '4 Layers, 160 bars, bkg = 10', '2 Layers, 80 bars,  bkg = 931', '2 Layers, 80 bars,  bkg = 90', '2 Layers, 80 bars,  bkg = 0', '2 Layers, 80 bars,  bkg = 931, 5Npe', '2 Layers, 80 bars,  bkg = 90, 5Npe', '1 Layer, 1 bar, bkg = 47k, 5Npe'], loc = 'lower right')
 
     plt.savefig('sensitivity_lanl.pdf')
     plt.show()

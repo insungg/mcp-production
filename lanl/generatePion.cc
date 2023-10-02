@@ -21,7 +21,7 @@ const double TpiMax = Tp - mpi; // maximum kinetic energy of pion produced
 
 
 // distrbution parameters
-const int TRIALS = 100000;
+const int TRIALS = 10000000;
 const double knots[]  = {0, 0, 0, 30, 70, 180, 180, 180};
 const double B = 25.0;
 
@@ -81,7 +81,7 @@ void generatePion() {
 			}
 		}
 		records.push_back(momentum);
-		if (i % 10000 == 0) cout << i << " th jobe done" << endl;
+		if (i % 10000 == 0) cout << i << " th job done" << endl;
 	}
 
 	// save momentum distribution
