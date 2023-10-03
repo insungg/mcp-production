@@ -52,12 +52,12 @@ void autoDecayPion() { // mass of chi in MeV
 		cout << "Failed to open pion data" << endl;
 		return -1;
 	}
-	ifstream massTxt("mass2.txt");
+	ifstream massTxt("mass3.txt");
 	if (!massTxt.is_open()) {
 		cout << "Failed to open mass data" << endl;
 		return -1;
 	}
-	ofstream ageoTxt("ageo_e72.txt");
+	ofstream ageoTxt("ageo_e73.txt");
 	if (!ageoTxt.is_open()) {
 		cout << "Failed to open ageo data" << endl;
 		return -1;
